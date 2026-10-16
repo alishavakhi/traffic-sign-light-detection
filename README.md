@@ -1,5 +1,7 @@
 # Unified Traffic Sign and Traffic Light Detection
 
+Developed as part of academic coursework at the University of Padova, Italy.
+
 A single YOLO11 detector that recognises **20 traffic sign classes and 13 traffic
 light states** in one forward pass, trained on a merged dataset built from two
 independent public datasets that share nothing but the road scene.
