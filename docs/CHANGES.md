@@ -21,8 +21,15 @@ hard-coded as a string literal.** It is removed from both files here.
 - `src/train.py` and `src/predict.py` now read `ROBOFLOW_API_KEY` from the
   environment and exit with an instructive message if it is unset.
 - `.env.example` documents the variable; `.env` is gitignored.
-- `tools/static_checks.py` fails if the literal pattern reappears anywhere in the
-  tree.
+- `tools/static_checks.py` fails if a credential literal appears anywhere in the
+  tree, matching **structurally** rather than by value, plus one digest check
+  confirming that the specific key from the original submission has not returned.
+
+  An earlier revision of that checker listed the literal key as its search
+  pattern, which meant this repository published the credential it was testing
+  for. Caught by verifying the live remote rather than the push. The pattern is
+  now structural and the specific key is matched by SHA-256, so the check remains
+  verifiable without republishing anything.
 
 **A key that has been committed is compromised even after deletion.** The original
 key was never published — this is the first public repository for this project —
@@ -108,7 +115,7 @@ one of them.
 - `tests/test_converters.py` — 9 tests over the conversion arithmetic and the
   malformed-record handling, using hand-built fixtures. Runnable with or without
   pytest.
-- `tools/static_checks.py` — 12 checks that need no GPU, dataset or weights.
+- `tools/static_checks.py` — 13 checks that need no GPU, dataset or weights.
 
 ## 8. What was deliberately NOT done
 

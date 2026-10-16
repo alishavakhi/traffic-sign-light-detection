@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import re
 import subprocess
@@ -29,17 +30,27 @@ REPO = Path(__file__).resolve().parent.parent
 FAILURES: list[str] = []
 PASSES: list[str] = []
 
-#: Patterns that must never appear in a committed file. The first entry is the
-#: literal key that was hard-coded in the original submission (removed here —
-#: see CHANGES.md); the rest are generic shapes.
+#: Patterns that must never appear in a committed file.
+#:
+#: These match credentials *structurally* rather than by value. An earlier
+#: revision listed the literal key found in the original submission so the check
+#: could confirm its removal — which meant this repository published the very
+#: credential it was testing for. A checker must not be a leak.
 SECRET_PATTERNS = [
-    (r"dYnVH3sNlRxzPWBAFteJ", "the original hard-coded Roboflow API key"),
-    (r"""(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*["'][A-Za-z0-9_\-]{16,}["']""",
+    # an assignment that looks like a credential
+    (r"""(?i)(api[_-]?key|secret|password|passwd|token|access[_-]?key)\s*[:=]\s*"""
+     r"""["'][^"'\s]{12,}["']""",
      "a hard-coded credential"),
+    # a bare 20-character alphanumeric token — the shape a Roboflow key has
+    (r"""["'][A-Za-z0-9]{20}["']""",
+     "a bare 20-character token (Roboflow key shape)"),
+    # a private key block
+    (r"-----BEGIN [A-Z ]*PRIVATE KEY-----", "an embedded private key"),
 ]
 
-#: Files where a match is expected because the value is being described, not used.
-SECRET_ALLOWLIST = {"tools/static_checks.py", "docs/CHANGES.md", "README.md"}
+#: No allowlist: now that the credential is matched structurally, a match anywhere
+#: is a real finding. An earlier revision skipped the checker's own file, which
+#: would have hidden a genuine leak there.
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
@@ -101,14 +112,17 @@ def c3_class_index() -> None:
 
 
 def c4_no_secrets() -> None:
-    """No credential is committed outside the files that describe the removal."""
+    """No credential is committed, and the original key has not returned.
+
+    The second half matches the specific key from the original submission by
+    SHA-256 rather than by value: the check is verifiable without this repository
+    republishing what it is checking for.
+    """
     hits = []
     for p in sorted(REPO.rglob("*")):
         if not p.is_file() or ".git" in p.parts or "__pycache__" in p.parts:
             continue
         rel = p.relative_to(REPO).as_posix()
-        if rel in SECRET_ALLOWLIST:
-            continue
         if p.suffix.lower() in (".png", ".jpg", ".jpeg", ".pdf", ".zip", ".pt"):
             continue
         try:
@@ -119,6 +133,30 @@ def c4_no_secrets() -> None:
             if re.search(pattern, text):
                 hits.append(f"{rel} ({what})")
     check("secrets: none committed", not hits, "; ".join(hits))
+
+
+def c4b_original_key_absent() -> None:
+    """The exact key hard-coded in the original submission is gone.
+
+    Identified by digest, so the literal never appears in this repository.
+    """
+    target = "117902cd0bdbc52008a815f98f7bb34a9c537e876b82dafc55c2e272be7fffad"
+    offenders = []
+    token = re.compile(r"[A-Za-z0-9]{20}")
+    for p in sorted(REPO.rglob("*")):
+        if not p.is_file() or ".git" in p.parts or "__pycache__" in p.parts:
+            continue
+        if p.suffix.lower() in (".png", ".jpg", ".jpeg", ".pdf", ".zip", ".pt"):
+            continue
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for candidate in token.findall(text):
+            if hashlib.sha256(candidate.encode()).hexdigest() == target:
+                offenders.append(str(p.relative_to(REPO)))
+    check("secrets: the original hard-coded key is absent", not offenders,
+          f"found in {offenders}")
 
 
 def c5_credentials_from_env() -> None:
@@ -238,6 +276,7 @@ CHECKS = [
     ("syntax", c2_compiles),
     ("classes", c3_class_index),
     ("secrets-present", c4_no_secrets),
+    ("secrets-original-key", c4b_original_key_absent),
     ("secrets-env", c5_credentials_from_env),
     ("samples", c6_samples_match),
     ("docs-links", c7_docs_match_code),

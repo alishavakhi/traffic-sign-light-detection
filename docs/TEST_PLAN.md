@@ -69,14 +69,15 @@ and the limitations section says so.
 ## 2. What was verified while preparing this repository
 
 Run on an Ubuntu 24.04 host with no GPU, no dataset, no Roboflow account and no
-trained weights. `python tools/static_checks.py` — **12 checks, all passing**:
+trained weights. `python tools/static_checks.py` — **13 checks, all passing**:
 
 | Check | What it establishes |
 |---|---|
 | layout | every file the README names exists |
 | syntax | every `.py` parses (`ast.parse`) |
 | classes | the 33-class index is contiguous 0-32, unique, round-trips through `name_for`, and splits cleanly into signs 0-19 / lights 20-32 |
-| secrets-present | the hard-coded API key of the original submission is gone from the tree |
+| secrets-present | no credential literal is committed — matched structurally, so the check does not itself publish what it looks for |
+| secrets-original-key | the exact key from the original submission is absent, matched by SHA-256 digest rather than by value |
 | secrets-env | `train.py` and `predict.py` read the key from `ROBOFLOW_API_KEY` |
 | samples | all 38 recorded files pair up: every prediction has a matching input |
 | docs-links | every relative link in every markdown file resolves |
@@ -160,7 +161,7 @@ recorded outputs already there — the original project's results are the refere
 ### Checks that need no GPU
 
 ```bash
-python tools/static_checks.py          # 12 checks, exit 0
+python tools/static_checks.py          # 13 checks, exit 0
 python tools/static_checks.py --json   # machine-readable
 ```
 

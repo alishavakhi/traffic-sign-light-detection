@@ -48,7 +48,7 @@ model that reports `STOP` and `GreenStraight` from the same weights.
   ready-to-train `data.yaml`.
 - **Two training routes** — Roboflow-hosted or fully local from a `data.yaml`.
 - **Two inference backends** — the hosted model, or a local `.pt` checkpoint.
-- **Nine converter tests and twelve static checks** runnable with no GPU, no
+- **Nine converter tests and thirteen static checks** runnable with no GPU, no
   dataset and no trained weights.
 
 ## Visual demonstrations
@@ -219,7 +219,7 @@ reordered: [`docs/PIPELINE.md`](docs/PIPELINE.md).
 ├── tests/
 │   └── test_converters.py   9 tests over the conversion arithmetic
 ├── tools/
-│   └── static_checks.py     12 checks needing no GPU or dataset
+│   └── static_checks.py     13 checks needing no GPU or dataset
 ├── samples/
 │   ├── inputs/              held-out frames: easy/ and hard/
 │   └── predictions/         the model's recorded output on those frames
@@ -269,7 +269,7 @@ third-party research data with their own terms — see
 ### Check the environment without a GPU
 
 ```bash
-python tools/static_checks.py        # 12 checks, exit 0 on success
+python tools/static_checks.py        # 13 checks, exit 0 on success
 python tests/test_converters.py      # 9 tests, no pytest required
 ```
 
@@ -380,7 +380,7 @@ figures were not measured on this machine.*
 
 | Check | Result |
 |---|---|
-| `tools/static_checks.py` | 12 / 12 passing, exit 0 |
+| `tools/static_checks.py` | 13 / 13 passing, exit 0 |
 | `tests/test_converters.py` | 9 / 9 passing |
 | Class index integrity | 33 classes, contiguous 0–32, round-trips, splits 20/13 |
 | Recorded sample pairing | 19 / 19 predictions have a matching input |
