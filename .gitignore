@@ -1,0 +1,39 @@
+# --- secrets ---
+.env
+*.env
+!.env.example
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# --- YOLO / training output ---
+runs/
+weights/
+*.pt
+*.onnx
+*.engine
+*.tflite
+
+# --- datasets (large; download or regenerate, never commit) ---
+data/
+datasets/
+*.zip
+*.tar.gz
+
+# --- notebooks / tooling ---
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__MACOSX/

@@ -1,0 +1,17 @@
+# Unified traffic sign + traffic light detection — runtime dependencies.
+#
+# Python 3.9+ (developed and tested on 3.11/3.13).
+#
+# Core detection stack. NOTE: ultralytics is distributed under AGPL-3.0, which
+# is a copyleft licence — see THIRD_PARTY_NOTICES.md before using this in a
+# closed-source product.
+ultralytics>=8.3.0
+roboflow>=1.1.0
+
+# Image handling and annotation parsing
+opencv-python>=4.8.0
+PyYAML>=6.0
+
+# PDF/report tooling used only by the optional figure generator
+# (uncomment if you run tools/make_figures.py)
+# Pillow>=10.0.0
