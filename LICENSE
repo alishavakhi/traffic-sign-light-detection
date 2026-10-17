@@ -19,23 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Scope of this licence
----------------------
-
-This MIT licence covers the source code, documentation and configuration written
-for this repository, except where a file states otherwise.
-
-It does **not** cover:
-
-  - `src/bstld_to_yolo.py`, which is derived from MIT-licensed code by
-    Robert Bosch LLC and Karsten Behrendt (also MIT, with its own notice — see
-    THIRD_PARTY_NOTICES.md);
-  - the third-party libraries listed in `requirements.txt`, which keep their own
-    licences — notably `ultralytics`, which is AGPL-3.0;
-  - the sample images under `samples/`, which come from research datasets and are
-    included for non-commercial illustrative purposes only.
-
-Full details: THIRD_PARTY_NOTICES.md.

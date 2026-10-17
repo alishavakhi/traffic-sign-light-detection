@@ -144,3 +144,20 @@ beyond the illustrative samples are published, and that limitation is carried in
 `THIRD_PARTY_NOTICES.md` §2 and `docs/TEST_PLAN.md`.
 
 If the source is known, that section should be completed.
+
+---
+
+## Licence scope moved out of the `LICENSE` file
+
+**Files:** `LICENSE`, new `LICENSE-SCOPE.md`
+
+The MIT licence text was correct, but a "Scope of this licence" section had been
+appended to the same file. GitHub's licence detector matches a file against known
+licence texts, so the extra section made it report **no licence** for this
+repository instead of MIT — a worse result for anyone deciding whether they may
+reuse the code.
+
+The scope text is now in `LICENSE-SCOPE.md` and is referenced from the README's
+*Licence* section. `LICENSE` holds the standard MIT text and nothing else. No
+right or exclusion was changed in the move — the same words, in a file that
+parsers and readers can both use.

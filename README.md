@@ -234,6 +234,7 @@ reordered: [`docs/PIPELINE.md`](docs/PIPELINE.md).
 │   └── report/              the original project report (redacted)
 ├── requirements.txt
 ├── THIRD_PARTY_NOTICES.md
+├── LICENSE-SCOPE.md     what the licence does and does not cover
 └── LICENSE
 ```
 
@@ -469,7 +470,8 @@ normalisation logic was altered.**
 The code in this repository is released under the **MIT Licence** — see
 [`LICENSE`](LICENSE) — except where a file states otherwise. That exclusion covers
 `src/bstld_to_yolo.py`, the sample images under `samples/`, and the third-party
-dependencies.
+dependencies. The scope is written out in full in
+[`LICENSE-SCOPE.md`](LICENSE-SCOPE.md).
 
 Read [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) before reusing anything from
 `samples/` or `docs/report/`.
